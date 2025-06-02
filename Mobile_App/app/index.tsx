@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AuthContext, useAuthReducer } from '../auth';
+import { AuthContext, useAuthReducer } from './Auth/auth';
 
 const Stack = createStackNavigator();
 
@@ -50,7 +50,7 @@ function SplashScreen() {
   );
 }
 
-function SignInScreen({ navigation }) {
+function SignInScreen({ navigation }: {navigation: any} ) {
   const [login, setLogin] = React.useState('');
   const [senha, setSenha] = React.useState('');
   const auth = React.useContext(AuthContext);
@@ -70,7 +70,7 @@ function SignInScreen({ navigation }) {
   );
 }
 
-function SignUpScreen({ navigation }) {
+function SignUpScreen({ navigation }: {navigation: any}) {
   const [login, setLogin] = React.useState('');
   const [senha, setSenha] = React.useState('');
   const [confirmaSenha, setConfirmaSenha] = React.useState('');

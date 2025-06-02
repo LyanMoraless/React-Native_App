@@ -1,9 +1,10 @@
 // Importar dependências
 const express = require('express');
-const mysql = require('mysql2');
+// const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const sqlite3 = require('sqlite3').verbose();
 
 // Criar aplicação Express
 const app = express();
@@ -17,25 +18,35 @@ app.use(cors({
 app.use(express.json());
 
 // Configuração da conexão com o MySQL
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',        // Altere para seu usuário MySQL
-  password: ''
-  database: 'prova'   // Nome do banco 
+// const connection = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',        // Altere para seu usuário MySQL
+//   password: '',
+//   database: 'prova'   // Nome do banco 
+// });
+
+const db = new sqlite3.Database('./database.db', (err) => {
+  if (err) return console.error(err.message);
+  console.log('Conectado ao banco SQLite.');
 });
 
-// Conectar ao banco de dados
-connection.connect(err => {
-  if (err) {
-    console.error('Erro ao conectar ao MySQL:', err);
-    return;
-  }
-  console.log('Conectado ao banco de dados MySQL!');
-});
+// // Conectar ao banco de dados
+// connection.connect(err => {
+//   if (err) {
+//     // console.error('Erro ao conectar ao MySQL:', err);
+//     return;
+//   }
+//   console.log('Conectado ao banco de dados MySQL!');
+// });
+
+app.get('/teste', async (req, res) => {
+  
+})
 
 // Endpoint para criar novo usuário
 app.post('/usuarios', async (req, res) => {
   const { login, senha } = req.body;
+
 
   // Validação básica
   if (!login || !senha) {
@@ -48,7 +59,7 @@ app.post('/usuarios', async (req, res) => {
     const senhaHash = await bcrypt.hash(senha, salt);
 
     // Inserir usuário no banco
-    connection.query(
+    db.run(
       'INSERT INTO usuarios (login, senha) VALUES (?, ?)',
       [login, senhaHash],
       (err, results) => {
